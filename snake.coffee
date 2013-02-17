@@ -16,10 +16,14 @@ currentAppleType = "green"
 dx = 1
 dy = 0
 appleTimeout = null
+applesCollected = null
 highScore = 0
 score = 0
 snakePiecesLeftToAdd = 0
 gameState = "inprogress"
+gameInterval = null
+startingGameIntervalRate = 200
+currentGameIntervalRate = null
 
 $(document).keydown (evt) ->
 	if gameState == "dead" and evt.keyCode == 32
@@ -51,7 +55,10 @@ initGame = ->
 	gameState = "inprogress"
 	score = 0
 	updateScore 0
+	applesCollected = 0
 	currentAppleType = "green"
+	currentGameIntervalRate = startingGameIntervalRate
+	initGameLoop startingGameIntervalRate
 
 gameBoardWidth = ->
 	numColumns * gridSize
@@ -126,6 +133,10 @@ moveSnake = (snake) ->
 		clearTimeout appleTimeout
 		positionApple snake
 		updateScore 25
+		applesCollected++
+		if applesCollected % 5 == 0
+			currentGameIntervalRate-= 20
+			initGameLoop currentGameIntervalRate
 	else if snakeIsDead
 		endGame()
 	else if snakePiecesLeftToAdd == 0
@@ -133,6 +144,9 @@ moveSnake = (snake) ->
 
 	if snakePiecesLeftToAdd > 0
 		snakePiecesLeftToAdd--
+
+	
+		
 
 	null
 
@@ -172,7 +186,11 @@ tick = ->
 	else if gameState == "dead"
 		drawDeadScreen context
 
+initGameLoop = (spd) ->
+	console.log "SPD #{spd}"
+	clearInterval gameInterval
+	gameInterval = setInterval ->
+		tick()
+	, spd	
+
 initGame()
-setInterval ->
-	tick()
-, 150	

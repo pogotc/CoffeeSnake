@@ -11,13 +11,14 @@ snake = []
 applePos = 
 	x: 10
 	y: 10
+currentAppleType = "green"
 
 dx = 1
 dy = 0
-
+appleTimeout = null
 highScore = 0
 score = 0
-
+snakePiecesLeftToAdd = 0
 gameState = "inprogress"
 
 $(document).keydown (evt) ->
@@ -50,6 +51,7 @@ initGame = ->
 	gameState = "inprogress"
 	score = 0
 	updateScore 0
+	currentAppleType = "green"
 
 gameBoardWidth = ->
 	numColumns * gridSize
@@ -74,11 +76,20 @@ generateNewRandomPosition = ->
 	newPos
 
 positionApple = (snake) ->
+	console.log("Positioning")
 	pos = generateNewRandomPosition()
 	while(positionCollidesWithSnake pos, snake)
-		pos = generateNewRandomPosition()
-
+		pos = generateNewRandomPosition()		
 	applePos = pos
+
+	if Math.random() > 0.8
+		console.log("Setting timeout")
+		currentAppleType = "red"
+		appleTimeout = setTimeout ->
+			positionApple snake
+		, 7000
+	else
+		currentAppleType = "green"
 
 positionCollidesWithSnake = (pos, snake) ->
 	for snakePos in snake
@@ -88,7 +99,7 @@ positionCollidesWithSnake = (pos, snake) ->
 	return false;
 
 updateScore = (points) ->
-	score += points
+	score += points * snake.length
 	$('#score').html score
 
 moveSnake = (snake) -> 
@@ -106,12 +117,22 @@ moveSnake = (snake) ->
 		snake.push snakeHead
 
 	if snakeHead.x == applePos.x and snakeHead.y == applePos.y
+		if currentAppleType == "green"
+			snakePiecesLeftToAdd = 2
+		else if currentAppleType == "red" 
+			snakePiecesLeftToAdd = 5
+
+		console.log("Clearing timeout")
+		clearTimeout appleTimeout
 		positionApple snake
 		updateScore 25
 	else if snakeIsDead
 		endGame()
-	else
+	else if snakePiecesLeftToAdd == 0
 		snake.shift()
+
+	if snakePiecesLeftToAdd > 0
+		snakePiecesLeftToAdd--
 
 	null
 
@@ -124,7 +145,11 @@ endGame = ->
 	$("#high-score").html highScore
 
 drawApple = (ctx) ->
-	context.fillStyle = '#00AA00'
+	if currentAppleType == "green"
+		context.fillStyle = '#00AA00'
+	else if currentAppleType = "red" 
+		context.fillStyle = '#AA0000'
+
 	context.fillRect gridPosToCanvasPos(applePos.x) + 1, gridPosToCanvasPos(applePos.y) + 1, gridSize - 2, gridSize - 2	
 
 drawDeadScreen = (ctx) ->

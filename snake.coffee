@@ -15,6 +15,7 @@ applePos =
 dx = 1
 dy = 0
 
+highScore = 0
 score = 0
 
 gameState = "inprogress"
@@ -108,11 +109,19 @@ moveSnake = (snake) ->
 		positionApple snake
 		updateScore 25
 	else if snakeIsDead
-		gameState = "dead"
+		endGame()
 	else
 		snake.shift()
 
 	null
+
+endGame = ->
+	gameState = "dead"
+	console.log score, highScore
+	if score > highScore
+		highScore = score
+
+	$("#high-score").html highScore
 
 drawApple = (ctx) ->
 	context.fillStyle = '#00AA00'

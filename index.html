@@ -16,14 +16,20 @@
 		}
 		#status {
 			margin: 0px;
-			text-align: right;
+		}
+		.high-score-container {
+			float: left;
+		}
+		.score-container {
+			float: right;
 		}
 	</style>
 </head>
 <body>
 	<div id="container">
 		<div id="status">
-			<p>Score: <span id="score">123</p>
+			<p class="high-score-container">High Score <span id="high-score">0</p>
+			<p class="score-container">Score: <span id="score">0</p>
 		</div>
 		<canvas id="snake-game" width="600" height="500"></canvas>
 	</div>

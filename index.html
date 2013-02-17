@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Coffee Snake</title>
+	<style type="text/css">
+		body {
+			font-family: helvetica;
+			margin: 0px;
+			background: #f4f4f4;
+		}
+		#container {
+			background: #fff;
+			margin: 0px auto;
+			width: 600px;
+			padding: 10px 50px 30px;
+		}
+		#status {
+			margin: 0px;
+			text-align: right;
+		}
+	</style>
+</head>
+<body>
+	<div id="container">
+		<div id="status">
+			<p>Score: <span id="score">123</p>
+		</div>
+		<canvas id="snake-game" width="600" height="500"></canvas>
+	</div>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="snake.js"></script>
+</body>
+</html>
